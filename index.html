@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .split {
+            display: flex;
+            flex-direction: row;
+            width: 500px;
+        }
+
+        .split .left {
+            background-color: red;
+            color: white;
+            font-weight: bold;
+            height: 40px;
+            text-align: center;
+        }
+
+        .split .right {
+            background-color: blue;
+            color: white;
+            font-weight: bold;
+            height: 40px;
+            text-align: center;
+        }
+        
+        .inp {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="inp">
+        <label for="deposit">Deposit: <br/></label>
+        <input id="deposit" name="deposit" type="number" value="18000" onchange="recalc()">
+    </div>
+
+    <div class="inp">
+        <label for="mortgage-fee">Mortgage Fee: <br/></label>
+        <input id="mortgage-fee" name="mortgage-fee" type="number" value="900" onchange="recalc()">
+    </div>
+
+    <div class="inp">
+        <label for="sell">Sell: <br/></label>
+        <input id="sell" name="sell" type="number" value="20000" onchange="recalc()">
+    </div>
+
+    <div class="inp">
+        <label for="months">Months: <br/></label>
+        <input id="months" name="months" type="number" value="5" onchange="recalc()">
+    </div>
+
+    <div>
+        How money from the house is split
+    </div>
+    <div class="split">
+        <div id="iris" class="left">
+            <div id="iris-paid"></div>
+            <div>Iris</div>
+        </div>
+        <div id="will" class="right">
+            <div id="will-paid"></div>
+            <div>Will</div>
+        </div>
+    </div>
+
+    <script>
+        const depositEl = document.getElementById('deposit');
+        const mortgageFeeEl = document.getElementById('mortgage-fee');
+        const sellEl = document.getElementById('sell');
+        const monthsEl = document.getElementById('months');
+
+        const irisEl = document.getElementById('iris');
+        const willEl = document.getElementById('will');
+        const irisPaidEl = document.getElementById('iris-paid');
+        const willPaidEl = document.getElementById('will-paid');
+
+        const recalc = () => {
+            const deposit = parseFloat(depositEl.value);
+            const mortgageFee = parseFloat(mortgageFeeEl.value);
+            const sell = parseFloat(sellEl.value);
+            const months = parseFloat(monthsEl.value);
+
+            let irisPaid = deposit;
+            let willPaid = 0;
+
+            const mortgage = mortgageFee * months;
+            if (mortgage < deposit) {
+                willPaid += mortgage;
+            } else {
+                willPaid += deposit;
+                
+                const mortgageEach = (mortgage - deposit) / 2;
+                willPaid += mortgageEach;
+                irisPaid += mortgageEach;
+            }
+
+            const irisRatio = irisPaid / (irisPaid + willPaid);
+            const willRatio = 1 - irisRatio;
+
+            const irisReturn = sell * irisRatio;
+            const willReturn = sell * willRatio;
+
+            irisPaidEl.textContent = `£${irisReturn.toFixed(2)}`;
+            willPaidEl.textContent = `£${willReturn.toFixed(2)}`;
+
+            irisEl.style.width = `${irisRatio * 100}%`;
+            willEl.style.width = `${willRatio * 100}%`;
+        };
+
+        recalc();
+    </script>
+</body>
+</html>
