@@ -9,7 +9,7 @@
     <style>
         .split {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             width: 500px;
         }
 
@@ -100,11 +100,12 @@
                 irisPaid += mortgageEach;
             }
 
-            const irisRatio = irisPaid / (irisPaid + willPaid);
-            const willRatio = 1 - irisRatio;
+            const irisOwed = irisPaid - willPaid;
+            const irisReturn = irisOwed + ((sell - irisOwed) / 2);
+            const willReturn = (sell - irisOwed) / 2;
 
-            const irisReturn = sell * irisRatio;
-            const willReturn = sell * willRatio;
+            const irisRatio = irisReturn / sell;
+            const willRatio = willReturn / sell;
 
             irisPaidEl.textContent = `£${irisReturn.toFixed(2)}`;
             willPaidEl.textContent = `£${willReturn.toFixed(2)}`;
